@@ -9,6 +9,7 @@ from resources.teacher import blp as teacher_blue_print
 from resources.subject import blp as subject_blue_print
 from resources.standard_subject import blp as standard_and_subject_blue_print
 from resources.teacher_standard_subject import blp as teacher_standard_subject_blue_print
+from resources.email import blp as email_blue_print
 from flask_migrate import Migrate
 from db import db
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt
@@ -27,11 +28,14 @@ def create_app(db_url=None):
     app.config["OPENAPI_URL_PREFIX"] = "/"
     app.config["OPENAPI_SWAGGER_UI_PATH"] = "/swagger-ui"
     app.config["OPENAPI_SWAGGER_UI_URL"] = "https://cdn.jsdelivr.net/npm/swagger-ui-dist/"
-    app.config["SQLALCHEMY_DATABASE_URI"] = db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
+    app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:password@localhost/mydb"
+    # db_url or os.getenv("DATABASE_URL", "sqlite:///data.db")
     app.config["SQLALCHEMY_TRACK_NOTIFICATIONS"] = False
     app.config["JWT_SECRET_KEY"] = "137951886426508653722587015693140887494"
     db.init_app(app)
     migrate = Migrate(app, db)
+    # with app.app_context():
+    #     db.create_all()
     jwt = JWTManager(app)
 
     @jwt.token_in_blocklist_loader
@@ -83,5 +87,5 @@ def create_app(db_url=None):
     api.register_blueprint(blp=subject_blue_print)
     api.register_blueprint(blp=standard_and_subject_blue_print)
     api.register_blueprint(blp=teacher_standard_subject_blue_print)
-
+    api.register_blueprint(blp=email_blue_print)
     return app

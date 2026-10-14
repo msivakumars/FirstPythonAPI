@@ -7,4 +7,5 @@ flask-migrate
 flask-jwt-extended
 passlib
 gunicorn
-
+psycopg2-binary
+mailjet_rest
